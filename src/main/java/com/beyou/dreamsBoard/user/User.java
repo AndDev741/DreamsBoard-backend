@@ -1,22 +1,59 @@
 package com.beyou.dreamsBoard.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.beyou.dreamsBoard.dto.RegisterDTO;
+import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(nullable = false)
     String name;
+    @Column(nullable = false, unique = true)
     String email;
+    @Column(nullable = false)
     String password;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     Date created_at;
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     Date updated_at;
+
+    @PrePersist
+    protected void onCreate() {
+        LocalDate now = LocalDate.now();
+        setCreated_at(Date.valueOf(now));
+        setUpdated_at(Date.valueOf(now));
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        setUpdated_at(Date.valueOf(LocalDate.now()));
+    }
+
+
+    public User(String name, String email, String password, Date created_at, Date updated_at){
+        LocalDate now = LocalDate.now();
+        setName(name);
+        setEmail(email);
+        setPassword(password);
+        setCreated_at(Date.valueOf(now));
+        setUpdated_at(Date.valueOf(now));
+    }
+
+    public User(){
+
+    }
+
+    public User(RegisterDTO registerDTO){
+        setName(registerDTO.name());
+        setEmail(registerDTO.email());
+        setPassword(registerDTO.password());
+    }
 
     public Long getId() {
         return id;
