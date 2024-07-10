@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.function.EntityResponse;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,9 +27,9 @@ public class LoginController {
     public ResponseEntity<?> makeLogin(@RequestBody LoginDTO loginDTO){
         Optional<User> login = userService.makeLogin(loginDTO);
         if(login.isPresent()){
-            return ResponseEntity.ok("Login successfully");
+            return ResponseEntity.ok(Map.of("status", "success"));
         }
-        return ResponseEntity.status(401).body("Invalid Email or password");
+        return ResponseEntity.status(401).body(Map.of("status", "error"));
 
     }
 

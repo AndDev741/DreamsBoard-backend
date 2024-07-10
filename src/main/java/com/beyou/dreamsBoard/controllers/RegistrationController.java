@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/register")
 public class RegistrationController {
@@ -24,9 +26,9 @@ public class RegistrationController {
         try {
             User user = new User(registerDTO);
             userService.registerNewUser(user);
-            return ResponseEntity.ok("User registered successfully");
+            return ResponseEntity.ok(Map.of("status", "success"));
         }catch(Exception e){
-            return ResponseEntity.ok("Email already exist");
+            return ResponseEntity.ok(Map.of("status", "error"));
         }
 
 
