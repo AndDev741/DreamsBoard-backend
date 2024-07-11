@@ -1,6 +1,7 @@
 package com.beyou.dreamsBoard.controllers;
 
 import com.beyou.dreamsBoard.dto.LoginDTO;
+import com.beyou.dreamsBoard.security.TokenService;
 import com.beyou.dreamsBoard.user.User;
 import com.beyou.dreamsBoard.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,20 @@ import java.util.Optional;
 public class LoginController {
 
     private final UserService userService;
+    private TokenService tokenService;
     @Autowired
-    public LoginController(UserService userService){
+    public LoginController(UserService userService, TokenService tokenService){
         this.userService = userService;
+        this.tokenService = tokenService;
     }
 
     @PostMapping
     public ResponseEntity<?> makeLogin(@RequestBody LoginDTO loginDTO){
-        Optional<User> login = userService.makeLogin(loginDTO);
-        if(login.isPresent()){
-            return ResponseEntity.ok(Map.of("status", "success"));
+        String login = userService.makeLogin(loginDTO);
+        if(login.isEmpty()){
+            return ResponseEntity.status(401).body(Map.of("status", "error"));
         }
-        return ResponseEntity.status(401).body(Map.of("status", "error"));
+        return ResponseEntity.ok(Map.of("token:", login));
 
     }
 
