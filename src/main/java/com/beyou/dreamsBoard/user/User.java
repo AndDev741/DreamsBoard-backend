@@ -2,13 +2,18 @@ package com.beyou.dreamsBoard.user;
 
 import com.beyou.dreamsBoard.dto.RegisterDTO;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -22,6 +27,14 @@ public class User {
     Date created_at;
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     Date updated_at;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "role", columnDefinition = "TEXT")
+    UserRole role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -36,23 +49,25 @@ public class User {
     }
 
 
-    public User(String name, String email, String password, Date created_at, Date updated_at){
+    public User(String name, String email, String password){
         LocalDate now = LocalDate.now();
         setName(name);
         setEmail(email);
         setPassword(password);
         setCreated_at(Date.valueOf(now));
         setUpdated_at(Date.valueOf(now));
+        setRole(UserRole.USER);
     }
 
     public User(){
-
+        setRole(UserRole.USER);
     }
 
     public User(RegisterDTO registerDTO){
         setName(registerDTO.name());
         setEmail(registerDTO.email());
         setPassword(registerDTO.password());
+        setRole(UserRole.USER);
     }
 
     public Long getId() {
@@ -83,6 +98,31 @@ public class User {
         return password;
     }
 
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -101,5 +141,13 @@ public class User {
 
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
