@@ -1,5 +1,6 @@
 package com.beyou.dreamsBoard.user;
 
+import com.beyou.dreamsBoard.domain.dreamboard.DreamBoard;
 import com.beyou.dreamsBoard.dto.RegisterDTO;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,6 +35,9 @@ public class User implements UserDetails {
     String img_link;
     @Column(nullable = false)
     String perfil_phrase;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DreamBoard> dreamBoards;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
@@ -167,5 +171,13 @@ public class User implements UserDetails {
 
     public void setPerfil_phrase(String perfil_phrase) {
         this.perfil_phrase = perfil_phrase;
+    }
+
+    public List<DreamBoard> getDreamBoards() {
+        return dreamBoards;
+    }
+
+    public void setDreamBoards(List<DreamBoard> dreamBoards) {
+        this.dreamBoards = dreamBoards;
     }
 }
