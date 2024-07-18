@@ -30,6 +30,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role", columnDefinition = "TEXT")
     UserRole role;
+    @Column(nullable = false)
+    String img_link;
+    @Column(nullable = false)
+    String perfil_phrase;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
@@ -41,6 +45,9 @@ public class User implements UserDetails {
         LocalDate now = LocalDate.now();
         setCreated_at(Date.valueOf(now));
         setUpdated_at(Date.valueOf(now));
+        setRole(UserRole.USER);
+        setImg_link("https://i.pinimg.com/564x/e0/87/7c/e0877c5fbec4d096a4334a09bbe25ef5.jpg");
+        setPerfil_phrase("Be you best version");
     }
 
     @PreUpdate
@@ -50,24 +57,19 @@ public class User implements UserDetails {
 
 
     public User(String name, String email, String password){
-        LocalDate now = LocalDate.now();
         setName(name);
         setEmail(email);
         setPassword(password);
-        setCreated_at(Date.valueOf(now));
-        setUpdated_at(Date.valueOf(now));
-        setRole(UserRole.USER);
     }
 
     public User(){
-        setRole(UserRole.USER);
+
     }
 
     public User(RegisterDTO registerDTO){
         setName(registerDTO.name());
         setEmail(registerDTO.email());
         setPassword(registerDTO.password());
-        setRole(UserRole.USER);
     }
 
     public Long getId() {
@@ -149,5 +151,21 @@ public class User implements UserDetails {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getImg_link() {
+        return img_link;
+    }
+
+    public void setImg_link(String img_link) {
+        this.img_link = img_link;
+    }
+
+    public String getPerfil_phrase() {
+        return perfil_phrase;
+    }
+
+    public void setPerfil_phrase(String perfil_phrase) {
+        this.perfil_phrase = perfil_phrase;
     }
 }
