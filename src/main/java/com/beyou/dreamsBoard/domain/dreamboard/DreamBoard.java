@@ -3,6 +3,7 @@ package com.beyou.dreamsBoard.domain.dreamboard;
 import com.beyou.dreamsBoard.domain.mainElement.MainElement;
 import com.beyou.dreamsBoard.domain.reason.Reason;
 import com.beyou.dreamsBoard.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,7 +16,8 @@ public class DreamBoard {
     private Long id;
 
     @ManyToOne
-            @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @Column(nullable = false)
@@ -85,5 +87,13 @@ public class DreamBoard {
 
     public void setReasons(List<Reason> reasons) {
         this.reasons = reasons;
+    }
+
+    public List<MainElement> getMainElements() {
+        return mainElements;
+    }
+
+    public void setMainElements(List<MainElement> mainElements) {
+        this.mainElements = mainElements;
     }
 }
