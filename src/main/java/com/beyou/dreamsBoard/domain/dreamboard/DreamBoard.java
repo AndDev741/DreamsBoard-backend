@@ -6,6 +6,7 @@ import com.beyou.dreamsBoard.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,10 +29,53 @@ public class DreamBoard {
     private String secondary_img;
     @Column()
     private String secondary_phrase;
-    @OneToMany(mappedBy = "dreamBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dreamBoard", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Reason> reasons;
     @OneToMany(mappedBy = "dreamBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MainElement> mainElements;
+
+    public DreamBoard(){
+
+    }
+
+    public DreamBoard(Long id, User user, String background_img, String title, String secondary_img,
+                      String secondary_phrase, List<Reason> reasons, List<MainElement> mainElements) {
+        this.id = id;
+        this.user = user;
+        this.background_img = background_img;
+        this.title = title;
+        this.secondary_img = secondary_img;
+        this.secondary_phrase = secondary_phrase;
+        this.reasons = reasons;
+        this.mainElements = mainElements;
+    }
+
+    public DreamBoard(CreateBoardDTO createBoardDTO, User user){
+        setUser(user);
+        setBackground_img(createBoardDTO.background_img());
+        setTitle(createBoardDTO.title());
+        setSecondary_img(createBoardDTO.secondary_img());
+        setSecondary_phrase(createBoardDTO.secondary_phrase());
+        this.reasons = new ArrayList<>();
+        this.mainElements = new ArrayList<>();
+        initializeEntities(createBoardDTO);
+
+    }
+
+    public void initializeEntities(CreateBoardDTO createBoardDTO) {
+        if (createBoardDTO.reasons() != null) {
+            for (Reason reason : createBoardDTO.reasons()) {
+                reason.setDreamBoard(this);
+                this.reasons.add(reason);
+            }
+        }
+        if(createBoardDTO.mainElements() != null){
+            for(MainElement mainElement : createBoardDTO.mainElements()) {
+                mainElement.setDreamBoard(this);
+                this.mainElements.add(mainElement);
+            }
+        }
+    }
 
     public Long getId() {
         return id;

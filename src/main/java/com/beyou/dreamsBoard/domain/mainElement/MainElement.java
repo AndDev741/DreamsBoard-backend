@@ -1,6 +1,7 @@
 package com.beyou.dreamsBoard.domain.mainElement;
 
 import com.beyou.dreamsBoard.domain.dreamboard.DreamBoard;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,11 +12,21 @@ public class MainElement {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "dreamboard_id", nullable = false)
+    @JsonIgnore
     private DreamBoard dreamBoard;
     @Column()
     private String img_link;
     @Column
     private String phrase;
+
+    public MainElement(Long id, DreamBoard dreamBoard, String img_link, String phrase) {
+        this.id = id;
+        this.dreamBoard = dreamBoard;
+        this.img_link = img_link;
+        this.phrase = phrase;
+    }
+    public MainElement() {
+    }
 
     public Long getId() {
         return id;
