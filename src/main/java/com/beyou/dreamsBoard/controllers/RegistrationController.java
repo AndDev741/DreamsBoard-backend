@@ -4,6 +4,7 @@ import com.beyou.dreamsBoard.dto.RegisterDTO;
 import com.beyou.dreamsBoard.user.User;
 import com.beyou.dreamsBoard.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +23,13 @@ public class RegistrationController {
 
 
     @PostMapping
-    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
         try {
             User user = new User(registerDTO);
             userService.registerNewUser(user);
             return ResponseEntity.ok(Map.of("status", "success"));
         }catch(Exception e){
-            return ResponseEntity.ok(Map.of("status", "error"));
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(Map.of("status", "error"));
         }
 
 
