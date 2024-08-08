@@ -3,8 +3,11 @@ package com.beyou.dreamsBoard.controllers;
 import com.beyou.dreamsBoard.dto.LoginDTO;
 import com.beyou.dreamsBoard.security.TokenService;
 import com.beyou.dreamsBoard.user.User;
+import com.beyou.dreamsBoard.user.UserResponseDTO;
 import com.beyou.dreamsBoard.user.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,13 +30,13 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<?> makeLogin(@RequestBody LoginDTO loginDTO){
-        String login = userService.makeLogin(loginDTO);
-        if(login.isEmpty()){
-            return ResponseEntity.status(401).body(Map.of("status", "error"));
+    public ResponseEntity<?> makeLogin(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
+        try{
+            UserResponseDTO user= userService.makeLogin(loginDTO, response);
+            return ResponseEntity.ok(user);
+        } catch(RuntimeException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-        return ResponseEntity.ok(Map.of("token:", login));
-
     }
 
 }

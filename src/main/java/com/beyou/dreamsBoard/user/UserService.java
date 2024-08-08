@@ -2,10 +2,13 @@ package com.beyou.dreamsBoard.user;
 
 import com.beyou.dreamsBoard.dto.LoginDTO;
 import com.beyou.dreamsBoard.security.TokenService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,16 +36,29 @@ public class UserService {
 
     }
 
-    public String makeLogin(LoginDTO login){
+    public UserResponseDTO makeLogin(LoginDTO login, HttpServletResponse response){
         Optional<User> userLogin = repository.findByEmail(login.email());
         if(userLogin.isPresent()){
-            var token = tokenService.generateToken(userLogin.get());
             User user = userLogin.get();
             if(passwordEncoder.matches(login.password(), user.getPassword())){
-                return token;
+                var token = tokenService.generateToken(userLogin.get());
+                addJwtTokenToResponse(response, token);
+                return new UserResponseDTO(user.getId(), user.getName(), user.getImg_link(), user.getPerfil_phrase());
             }
+        }else{
+            throw new RuntimeException("Invalid email or password");
         }
-        return "";
+        return null;
+    }
+
+    private void addJwtTokenToResponse(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("jwt", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+
+        response.addCookie(cookie);
     }
 
 }

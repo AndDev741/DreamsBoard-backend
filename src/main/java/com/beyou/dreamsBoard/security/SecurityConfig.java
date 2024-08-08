@@ -35,6 +35,8 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .httpBasic(Customizer.withDefaults())
                 .logout(LogoutConfigurer::permitAll);
+
+        http.cors(Customizer.withDefaults());
         return http.build();
     }
 
