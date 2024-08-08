@@ -1,12 +1,10 @@
 package com.beyou.dreamsBoard.domain.dreamboard;
 
-import com.beyou.dreamsBoard.domain.mainElement.MainElement;
 import com.beyou.dreamsBoard.domain.reason.Reason;
 import com.beyou.dreamsBoard.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,60 +19,53 @@ public class DreamBoard {
     @JsonIgnore
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "background_img")
     private String background_img;
-    @Column(nullable = false)
+    @Column(name = "title")
     private String title;
-    @Column()
-    private String secondary_img;
-    @Column()
-    private String secondary_phrase;
-    @OneToMany(mappedBy = "dreamBoard", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Reason> reasons;
+    @Column(name = "mainObjective_text")
+    private String mainObjectiveText;
+    @Column(name = "mainObjective_img")
+    private String mainObjectiveImg;
+    @Column(name = "objective_text")
+    private String objective_text;
+    @Column(name = "objective_img")
+    private String objective_img;
+    @Column(name = "reason_title")
+    private String reason_title;
     @OneToMany(mappedBy = "dreamBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MainElement> mainElements;
+    private List<Reason> reasons;
 
     public DreamBoard(){
 
     }
 
-    public DreamBoard(Long id, User user, String background_img, String title, String secondary_img,
-                      String secondary_phrase, List<Reason> reasons, List<MainElement> mainElements) {
+    public DreamBoard(Long id, User user, String background_img, String title, String mainObjective_img,
+                      String mainObjective_text, String objective_text, String objective_img, String reason_title,
+                      List<Reason> reasons) {
         this.id = id;
         this.user = user;
         this.background_img = background_img;
         this.title = title;
-        this.secondary_img = secondary_img;
-        this.secondary_phrase = secondary_phrase;
+        this.mainObjectiveImg = mainObjective_img;
+        this.mainObjectiveText = mainObjective_text;
+        this.objective_text = objective_text;
+        this.objective_img = objective_img;
+        this.reason_title = reason_title;
         this.reasons = reasons;
-        this.mainElements = mainElements;
     }
 
-    public DreamBoard(CreateBoardDTO createBoardDTO, User user){
+    public DreamBoard(CreateBoardDTO createBoardDTO, User user, List<Reason> reasons){
         setUser(user);
-        setBackground_img(createBoardDTO.background_img());
+        setBackground_img(createBoardDTO.background_img().getOriginalFilename());
         setTitle(createBoardDTO.title());
-        setSecondary_img(createBoardDTO.secondary_img());
-        setSecondary_phrase(createBoardDTO.secondary_phrase());
-        this.reasons = new ArrayList<>();
-        this.mainElements = new ArrayList<>();
-        initializeEntities(createBoardDTO);
+        setMainObjective_text(createBoardDTO.mainObjective_text());
+        setMainObjectiveImg(createBoardDTO.mainObjective_img().getOriginalFilename());
+        setObjective_text(createBoardDTO.objective_text());
+        setObjective_img(createBoardDTO.objective_img().getOriginalFilename());
+        setReason_title(createBoardDTO.reason_title());
+        setReasons(reasons);
 
-    }
-
-    public void initializeEntities(CreateBoardDTO createBoardDTO) {
-        if (createBoardDTO.reasons() != null) {
-            for (Reason reason : createBoardDTO.reasons()) {
-                reason.setDreamBoard(this);
-                this.reasons.add(reason);
-            }
-        }
-        if(createBoardDTO.mainElements() != null){
-            for(MainElement mainElement : createBoardDTO.mainElements()) {
-                mainElement.setDreamBoard(this);
-                this.mainElements.add(mainElement);
-            }
-        }
     }
 
     public Long getId() {
@@ -109,20 +100,44 @@ public class DreamBoard {
         this.title = title;
     }
 
-    public String getSecondary_img() {
-        return secondary_img;
+    public String getMainObjectiveImg() {
+        return mainObjectiveImg;
     }
 
-    public void setSecondary_img(String secondary_img) {
-        this.secondary_img = secondary_img;
+    public void setMainObjective_text(String mainObjective_text) {
+        this.mainObjectiveText = mainObjective_text;
     }
 
-    public String getSecondary_phrase() {
-        return secondary_phrase;
+    public String getMainObjective_text() {
+        return mainObjectiveText;
     }
 
-    public void setSecondary_phrase(String secondary_phrase) {
-        this.secondary_phrase = secondary_phrase;
+    public void setMainObjectiveImg(String mainObjectiveImg) {
+        this.mainObjectiveImg = mainObjectiveImg;
+    }
+
+    public String getObjective_text() {
+        return objective_text;
+    }
+
+    public void setObjective_text(String objective_text) {
+        this.objective_text = objective_text;
+    }
+
+    public String getObjective_img() {
+        return objective_img;
+    }
+
+    public void setObjective_img(String objective_img) {
+        this.objective_img = objective_img;
+    }
+
+    public String getReason_title() {
+        return reason_title;
+    }
+
+    public void setReason_title(String reason_title) {
+        this.reason_title = reason_title;
     }
 
     public List<Reason> getReasons() {
@@ -133,11 +148,4 @@ public class DreamBoard {
         this.reasons = reasons;
     }
 
-    public List<MainElement> getMainElements() {
-        return mainElements;
-    }
-
-    public void setMainElements(List<MainElement> mainElements) {
-        this.mainElements = mainElements;
-    }
 }

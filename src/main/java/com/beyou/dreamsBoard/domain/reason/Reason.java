@@ -16,15 +16,25 @@ public class Reason {
     @JsonIgnore
     private DreamBoard dreamBoard;
     @Column
-    private String img_link;
+    private String title;
     @Column
-    private String phrase;
+    private String img;
+    @Column
+    private String text;
 
-    public Reason(Long id, DreamBoard dreamBoard, String img_link, String phrase) {
+    public Reason(Long id, DreamBoard dreamBoard, String title, String img, String text) {
         this.id = id;
         this.dreamBoard = dreamBoard;
-        this.img_link = img_link;
-        this.phrase = phrase;
+        this.title = title;
+        this.img = img;
+        this.text = text;
+    }
+
+    public Reason (String title, String img, String text, DreamBoard dreamBoard) {
+        this.title = title;
+        this.img = img;
+        this.text = text;
+        this.dreamBoard = dreamBoard;
     }
 
     public Reason() {
@@ -46,19 +56,19 @@ public class Reason {
         this.dreamBoard = dreamBoard;
     }
 
-    public String getImg_link() {
-        return img_link;
+    public String getImg() {
+        return img;
     }
 
-    public void setImg_link(String img_link) {
-        this.img_link = img_link;
+    public void setImg(String img) {
+        this.img = img;
     }
 
-    public String getPhrase() {
-        return phrase;
+    public String getText() {
+        return text;
     }
 
-    public void setPhrase(String phrase) {
-        this.phrase = phrase;
+    public void setText(String text) {
+        this.text = text;
     }
 }

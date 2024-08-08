@@ -1,11 +1,9 @@
 package com.beyou.dreamsBoard.domain.dreamboard;
 
-import com.beyou.dreamsBoard.domain.mainElement.MainElement;
-import com.beyou.dreamsBoard.domain.reason.Reason;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
-public record CreateBoardDTO(Long userId, String background_img, String title, String secondary_img,
-                             String secondary_phrase, List<Reason> reasons, List<MainElement> mainElements) {
+public record CreateBoardDTO(Long userId, MultipartFile background_img, String title, String mainObjective_text,
+                             MultipartFile mainObjective_img, String objective_text, MultipartFile objective_img,
+                             String reason_title) {
 
 }
