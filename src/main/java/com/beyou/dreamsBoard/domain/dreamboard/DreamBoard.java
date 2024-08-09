@@ -57,12 +57,12 @@ public class DreamBoard {
 
     public DreamBoard(CreateBoardDTO createBoardDTO, User user, List<Reason> reasons){
         setUser(user);
-        setBackground_img(createBoardDTO.background_img().getOriginalFilename());
+        setBackground_img(createBoardDTO.background_img());
         setTitle(createBoardDTO.title());
         setMainObjective_text(createBoardDTO.mainObjective_text());
-        setMainObjectiveImg(createBoardDTO.mainObjective_img().getOriginalFilename());
+        setMainObjectiveImg(createBoardDTO.mainObjective_img());
         setObjective_text(createBoardDTO.objective_text());
-        setObjective_img(createBoardDTO.objective_img().getOriginalFilename());
+        setObjective_img(createBoardDTO.objective_img());
         setReason_title(createBoardDTO.reason_title());
         setReasons(reasons);
 
