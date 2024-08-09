@@ -7,16 +7,12 @@ import com.beyou.dreamsBoard.domain.reason.Reason;
 import com.beyou.dreamsBoard.user.User;
 import com.beyou.dreamsBoard.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-import java.io.File;
-import java.io.IOException;
+
 import java.util.*;
 
 @RestController
@@ -27,9 +23,6 @@ public class DreamBoardController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Value("${upload.path}")
-    private String uploadPath;
 
     @GetMapping(value = "/{id}")
     public List<DreamBoard> getDreamboards(@PathVariable Long id){
