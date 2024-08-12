@@ -30,6 +30,17 @@ public class DreamBoardController {
         return dreamBoards;
     }
 
+    @GetMapping(value = "/getDreamBoard/{id}")
+    public ResponseEntity<?> getUniqueDreamboard(@PathVariable Long id){
+        try {
+            DreamBoard dreamBoard = repository.findById(id).orElseThrow();
+            return ResponseEntity.ok(dreamBoard);
+        }catch (Exception e){
+            ResponseEntity.badRequest().body(Map.of("status", "error"));
+        }
+        return ResponseEntity.badRequest().body(Map.of("status", "unknownError"));
+    }
+
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<?> handleMissingParameter(MissingServletRequestPartException e){
         return ResponseEntity.badRequest().body(Map.of("status", "errorMissing"));
