@@ -124,4 +124,59 @@ public class DreamBoardController {
         }
 
     }
+
+    @PutMapping(value = "/{dreamBoardId}")
+    public ResponseEntity<?> editDreamBoard(@PathVariable Long dreamBoardId,
+                                            @RequestParam("title") String title,
+                                            @RequestParam("mainObjective_text") String mainObjective_text,
+                                            @RequestParam("objective_text") String objective_text,
+                                            @RequestParam("reason_title") String reason_title,
+                                            @RequestParam("background_img") String backgroundImg,
+                                            @RequestParam("mainObjective_img") String mainObjective_img,
+                                            @RequestParam("objective_img") String objective_img,
+                                            @RequestParam("0[title]") String reason_title0,
+                                            @RequestParam("0[img]") String reason_img,
+                                            @RequestParam("0[text]") String reason_text,
+                                            @RequestParam("1[title]") String reason_title1,
+                                            @RequestParam("1[img]") String reason_img1,
+                                            @RequestParam("1[text]") String reason_text1,
+                                            @RequestParam("2[title]") String reason_title2,
+                                            @RequestParam("2[img]") String reason_img2,
+                                            @RequestParam("2[text]") String reason_text2){
+
+        Optional<DreamBoard> dreamBoardToEditOptional = repository.findById(dreamBoardId);
+        if(dreamBoardToEditOptional.isPresent()){
+             DreamBoard dreamBoardToEdit = dreamBoardToEditOptional.get();
+             dreamBoardToEdit.setTitle(title);
+             dreamBoardToEdit.setMainObjective_text(mainObjective_text);
+             dreamBoardToEdit.setObjective_text(objective_text);
+             dreamBoardToEdit.setReason_title(reason_title);
+             dreamBoardToEdit.setBackground_img(backgroundImg);
+             dreamBoardToEdit.setMainObjectiveImg(mainObjective_img);
+             dreamBoardToEdit.setObjective_img(objective_img);
+
+            List<Reason> reasonsEdit = dreamBoardToEdit.getReasons();
+            if (reasonsEdit == null) {
+                reasonsEdit = new ArrayList<>();
+            }else{
+                reasonsEdit.clear();
+            }
+
+            reasonsEdit.add(new Reason(reason_title0, reason_img, reason_text, dreamBoardToEdit));
+            reasonsEdit.add(new Reason(reason_title1, reason_img1, reason_text1, dreamBoardToEdit));
+            reasonsEdit.add(new Reason(reason_title2, reason_img2, reason_text2, dreamBoardToEdit));
+             dreamBoardToEdit.setReasons(reasonsEdit);
+             try{
+                 repository.save(dreamBoardToEdit);
+                 return ResponseEntity.ok().body(Map.of("success", "Dreamboard Edited successfully!"));
+             }catch(Exception e) {
+                 return ResponseEntity.badRequest().body(Map.of("error", "Error trying edit dreamBoard, try again"));
+             }
+
+        }else{
+            return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find dreamBoard, try again"));
+        }
+    }
+
+
 }
