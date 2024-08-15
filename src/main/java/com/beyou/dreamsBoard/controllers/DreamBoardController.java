@@ -107,4 +107,21 @@ public class DreamBoardController {
 
         return ResponseEntity.ok(Map.of("status", "success"));
     }
+
+    @DeleteMapping(value = "/{dreamBoardId}")
+    public ResponseEntity<?> deleteDreamboard(@PathVariable Long dreamBoardId){
+        Optional<DreamBoard> dreamBoardToDeleteOptional = repository.findById(dreamBoardId);
+        if(dreamBoardToDeleteOptional.isPresent()){
+            try{
+                DreamBoard dreamBoardToDelete = dreamBoardToDeleteOptional.get();
+                repository.delete(dreamBoardToDelete);
+                return ResponseEntity.ok().body(Map.of("success", "DreamBoard deleted successfully"));
+            }catch (Exception e){
+                return ResponseEntity.badRequest().body(Map.of("error", "error trying to delete DreamBoard"));
+            }
+        }else{
+            return ResponseEntity.badRequest().body(Map.of("error", "DreamBoard not finded, try again"));
+        }
+
+    }
 }
