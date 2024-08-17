@@ -37,4 +37,23 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body(Map.of("error", "Unknown error"));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+        try{
+            Optional<User> userToDeleteOptional = repository.findById(id);
+            if(userToDeleteOptional.isPresent()){
+                User userToDelete = userToDeleteOptional.get();
+                try{
+                    repository.delete(userToDelete);
+                    return ResponseEntity.ok().body(Map.of("success", "User deleted successfully"));
+                }catch(Exception e){
+                    return ResponseEntity.badRequest().body(Map.of("error", "Error trying to delete the user"));
+                }
+            }
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find the user"));
+        }
+        return ResponseEntity.badRequest().body(Map.of("error", "Unknown Error"));
+    }
 }
