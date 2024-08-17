@@ -2,6 +2,7 @@ package com.beyou.dreamsBoard.user;
 
 import com.beyou.dreamsBoard.domain.dreamboard.DreamBoard;
 import com.beyou.dreamsBoard.dto.RegisterDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +23,7 @@ public class User implements UserDetails {
     String name;
     @Column(nullable = false, unique = true)
     String email;
+    @JsonIgnore
     @Column(nullable = false)
     String password;
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
