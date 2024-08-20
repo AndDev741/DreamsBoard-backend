@@ -1,5 +1,6 @@
 package com.beyou.dreamsBoard.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,13 +34,15 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(formLogin -> formLogin.disable())
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(httpBasic -> httpBasic.disable())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
-                        .deleteCookies("jwt")
-                        .permitAll());
+                        .clearAuthentication(true)
+                        .addLogoutHandler(new CustomLogoutHandler())
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        }));
 
         http.cors(Customizer.withDefaults());
         return http.build();

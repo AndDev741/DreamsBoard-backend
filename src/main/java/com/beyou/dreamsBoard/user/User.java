@@ -23,7 +23,6 @@ public class User implements UserDetails {
     String name;
     @Column(nullable = false, unique = true)
     String email;
-    @JsonIgnore
     @Column(nullable = false)
     String password;
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

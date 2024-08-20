@@ -16,6 +16,11 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
+    @GetMapping("/verify/{id}")
+    public ResponseEntity<Map> verifyUser(@PathVariable Long id){
+        return ResponseEntity.ok().body(Map.of("success", "User logged"));
+    }
+
     @PutMapping("/edit")
     public ResponseEntity<?> editUser(@RequestBody UserEditDTO userEditDTO){
         try{
