@@ -14,9 +14,9 @@ public class CustomLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Cookie cookie = new Cookie("jwt", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true); // Certifique-se de que o mesmo atributo Secure seja usado
-        cookie.setPath("/"); // Mesmo Path usado na criação do cookie
-        cookie.setMaxAge(0); // Set MaxAge to 0 to delete the cookie
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
 
         response.addCookie(cookie);
     }
