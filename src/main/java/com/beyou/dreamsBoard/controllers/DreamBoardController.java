@@ -46,66 +46,34 @@ public class DreamBoardController {
         return ResponseEntity.badRequest().body(Map.of("status", "errorMissing"));
     }
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<?> createDreamBoard(@RequestParam("userId") UUID userId,
-                                              @RequestParam("title") String title,
-                                              @RequestParam("mainObjective_text") String mainObjective_text,
-                                              @RequestParam("objective_text") String objective_text,
-                                              @RequestParam("reason_title") String reason_title,
-                                            @RequestParam("background_img") String backgroundImg,
-                                            @RequestParam("mainObjective_img") String mainObjective_img,
-                                            @RequestParam("objective_img") String objective_img){
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<?> createDreamBoard(@RequestBody CreateBoardDTO createBoardDTO){
         try{
-            User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not Found"));
-
-            CreateBoardDTO createBoardDTO = new CreateBoardDTO(userId, backgroundImg, title, mainObjective_text,
-                    mainObjective_img, objective_text, objective_img, reason_title);
+            User user = userRepository.findById(createBoardDTO.userId()).orElseThrow(() -> new UsernameNotFoundException("User not Found"));
 
             DreamBoard dreamBoard = new DreamBoard(createBoardDTO, user, new ArrayList<>());
 
+            List<Reason> reasons = dreamBoard.getReasons();
+            if (reasons == null) {
+                reasons = new ArrayList<>();
+            }
+
+            List<Reason> reasonsToAdd = new ArrayList<Reason>(createBoardDTO.reasons());
+
+            reasons.add(new Reason(reasonsToAdd.get(0).getTitle(), reasonsToAdd.get(0).getImg(), reasonsToAdd.get(0).getText(), dreamBoard));
+            reasons.add(new Reason(reasonsToAdd.get(1).getTitle(), reasonsToAdd.get(1).getImg(), reasonsToAdd.get(1).getText(), dreamBoard));
+            reasons.add(new Reason(reasonsToAdd.get(2).getTitle(), reasonsToAdd.get(2).getImg(), reasonsToAdd.get(2).getText(), dreamBoard));
+            dreamBoard.setReasons(reasons);
             try {
                 dreamBoard = repository.save(dreamBoard);
+                return ResponseEntity.ok().body(Map.of("success", "Dreamboard saved successfully!"));
             } catch (Exception e) {
                 throw new RuntimeException("Error trying to save dreamboard", e);
             }
-            return ResponseEntity.ok(dreamBoard.getId());
         }catch (Exception e){
             return ResponseEntity.badRequest().body(Map.of("status", "errorDreamboard"));
         }
 
-    }
-
-    @PostMapping(value = "/reasons", consumes = "multipart/form-data")
-    public ResponseEntity<?> addReasonsToDreamBoard(@RequestParam("dreamboardId") UUID dreamBoardId,
-                                                    @RequestParam("0[title]") String reason_title,
-                                                    @RequestParam("0[img]") String reason_img,
-                                                    @RequestParam("0[text]") String reason_text,
-                                                    @RequestParam("1[title]") String reason_title1,
-                                                    @RequestParam("1[img]") String reason_img1,
-                                                    @RequestParam("1[text]") String reason_text1,
-                                                    @RequestParam("2[title]") String reason_title2,
-                                                    @RequestParam("2[img]") String reason_img2,
-                                                    @RequestParam("2[text]") String reason_text2) {
-        DreamBoard dreamBoard = repository.findById(dreamBoardId).orElseThrow();
-
-        List<Reason> reasons = dreamBoard.getReasons();
-        if (reasons == null) {
-            reasons = new ArrayList<>();
-        }
-
-        reasons.add(new Reason(reason_title, reason_img, reason_text, dreamBoard));
-        reasons.add(new Reason(reason_title1, reason_img1, reason_text1, dreamBoard));
-        reasons.add(new Reason(reason_title2, reason_img2, reason_text2, dreamBoard));
-
-        dreamBoard.setReasons(reasons);
-
-        try{
-            repository.save(dreamBoard);
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body(Map.of("status", "error"));
-        }
-
-        return ResponseEntity.ok(Map.of("status", "success"));
     }
 
     @DeleteMapping(value = "/{dreamBoardId}")
