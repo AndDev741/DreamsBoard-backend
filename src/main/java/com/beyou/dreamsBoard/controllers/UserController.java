@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -17,7 +18,7 @@ public class UserController {
     private UserRepository repository;
 
     @GetMapping("/verify/{id}")
-    public ResponseEntity<Map> verifyUser(@PathVariable Long id){
+    public ResponseEntity<Map> verifyUser(@PathVariable UUID id){
         return ResponseEntity.ok().body(Map.of("success", "User logged"));
     }
 
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+    public ResponseEntity<?> deleteUser(@PathVariable UUID id){
         try{
             Optional<User> userToDeleteOptional = repository.findById(id);
             if(userToDeleteOptional.isPresent()){

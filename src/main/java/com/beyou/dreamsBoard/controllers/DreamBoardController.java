@@ -25,7 +25,7 @@ public class DreamBoardController {
     private UserRepository userRepository;
 
     @GetMapping(value = "/{id}")
-    public List<DreamBoard> getDreamboards(@PathVariable Long id){
+    public List<DreamBoard> getDreamboards(@PathVariable UUID id){
         List<DreamBoard> dreamBoards = repository.findAllByUserId(id);
         return dreamBoards;
     }
@@ -47,7 +47,7 @@ public class DreamBoardController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<?> createDreamBoard(@RequestParam("userId") Long userId,
+    public ResponseEntity<?> createDreamBoard(@RequestParam("userId") UUID userId,
                                               @RequestParam("title") String title,
                                               @RequestParam("mainObjective_text") String mainObjective_text,
                                               @RequestParam("objective_text") String objective_text,

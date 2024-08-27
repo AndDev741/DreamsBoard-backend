@@ -4,6 +4,8 @@ import com.beyou.dreamsBoard.domain.dreamboard.DreamBoard;
 import com.beyou.dreamsBoard.dto.RegisterDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,30 +14,32 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @UuidGenerator
+    @Column(updatable = false, nullable = false, unique = true)
+    private UUID id;
     @Column(nullable = false)
-    String name;
+    private String name;
     @Column(nullable = false, unique = true)
-    String email;
+    private String email;
     @Column(nullable = false)
-    String password;
+    private String password;
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    Date created_at;
+    private Date created_at;
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    Date updated_at;
+    private Date updated_at;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role", columnDefinition = "TEXT")
-    UserRole role;
+    private UserRole role;
     @Column(nullable = false)
-    String img_link;
+    private String img_link;
     @Column(nullable = false)
-    String perfil_phrase;
+    private String perfil_phrase;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DreamBoard> dreamBoards;
@@ -77,11 +81,11 @@ public class User implements UserDetails {
         setPassword(registerDTO.password());
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

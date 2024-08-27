@@ -1,4 +1,6 @@
 package com.beyou.dreamsBoard.user;
 
-public record UserEditDTO (Long id, String img_link, String name, String perfil_phrase) {
+import java.util.UUID;
+
+public record UserEditDTO (UUID id, String img_link, String name, String perfil_phrase) {
 }
