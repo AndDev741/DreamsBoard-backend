@@ -3,6 +3,7 @@ package com.beyou.dreamsBoard.controllers;
 import com.beyou.dreamsBoard.domain.dreamboard.CreateBoardDTO;
 import com.beyou.dreamsBoard.domain.dreamboard.DreamBoard;
 import com.beyou.dreamsBoard.domain.dreamboard.DreamBoardRepository;
+import com.beyou.dreamsBoard.domain.dreamboard.EditBoardDTO;
 import com.beyou.dreamsBoard.domain.reason.Reason;
 import com.beyou.dreamsBoard.user.User;
 import com.beyou.dreamsBoard.user.UserRepository;
@@ -93,35 +94,19 @@ public class DreamBoardController {
 
     }
 
-    @PutMapping(value = "/{dreamBoardId}")
-    public ResponseEntity<?> editDreamBoard(@PathVariable UUID dreamBoardId,
-                                            @RequestParam("title") String title,
-                                            @RequestParam("mainObjective_text") String mainObjective_text,
-                                            @RequestParam("objective_text") String objective_text,
-                                            @RequestParam("reason_title") String reason_title,
-                                            @RequestParam("background_img") String backgroundImg,
-                                            @RequestParam("mainObjective_img") String mainObjective_img,
-                                            @RequestParam("objective_img") String objective_img,
-                                            @RequestParam("0[title]") String reason_title0,
-                                            @RequestParam("0[img]") String reason_img,
-                                            @RequestParam("0[text]") String reason_text,
-                                            @RequestParam("1[title]") String reason_title1,
-                                            @RequestParam("1[img]") String reason_img1,
-                                            @RequestParam("1[text]") String reason_text1,
-                                            @RequestParam("2[title]") String reason_title2,
-                                            @RequestParam("2[img]") String reason_img2,
-                                            @RequestParam("2[text]") String reason_text2){
+    @PutMapping(value = "/{dreamBoardId}", consumes = "application/json")
+    public ResponseEntity<?> editDreamBoard(@PathVariable UUID dreamBoardId, @RequestBody EditBoardDTO editBoardDTO){
 
         Optional<DreamBoard> dreamBoardToEditOptional = repository.findById(dreamBoardId);
         if(dreamBoardToEditOptional.isPresent()){
              DreamBoard dreamBoardToEdit = dreamBoardToEditOptional.get();
-             dreamBoardToEdit.setTitle(title);
-             dreamBoardToEdit.setMainObjective_text(mainObjective_text);
-             dreamBoardToEdit.setObjective_text(objective_text);
-             dreamBoardToEdit.setReason_title(reason_title);
-             dreamBoardToEdit.setBackground_img(backgroundImg);
-             dreamBoardToEdit.setMainObjectiveImg(mainObjective_img);
-             dreamBoardToEdit.setObjective_img(objective_img);
+             dreamBoardToEdit.setTitle(editBoardDTO.title());
+             dreamBoardToEdit.setMainObjective_text(editBoardDTO.mainObjective_text());
+             dreamBoardToEdit.setObjective_text(editBoardDTO.objective_text());
+             dreamBoardToEdit.setReason_title(editBoardDTO.reason_title());
+             dreamBoardToEdit.setBackground_img(editBoardDTO.background_img());
+             dreamBoardToEdit.setMainObjectiveImg(editBoardDTO.mainObjective_img());
+             dreamBoardToEdit.setObjective_img(editBoardDTO.objective_img());
 
             List<Reason> reasonsEdit = dreamBoardToEdit.getReasons();
             if (reasonsEdit == null) {
@@ -129,10 +114,11 @@ public class DreamBoardController {
             }else{
                 reasonsEdit.clear();
             }
+            List<Reason> ReasonsEdited = new ArrayList<Reason>(editBoardDTO.reasons());
 
-            reasonsEdit.add(new Reason(reason_title0, reason_img, reason_text, dreamBoardToEdit));
-            reasonsEdit.add(new Reason(reason_title1, reason_img1, reason_text1, dreamBoardToEdit));
-            reasonsEdit.add(new Reason(reason_title2, reason_img2, reason_text2, dreamBoardToEdit));
+            reasonsEdit.add(new Reason(ReasonsEdited.get(0).getTitle(), ReasonsEdited.get(0).getImg(), ReasonsEdited.get(0).getText(), dreamBoardToEdit));
+            reasonsEdit.add(new Reason(ReasonsEdited.get(1).getTitle(), ReasonsEdited.get(1).getImg(), ReasonsEdited.get(1).getText(), dreamBoardToEdit));
+            reasonsEdit.add(new Reason(ReasonsEdited.get(2).getTitle(), ReasonsEdited.get(2).getImg(), ReasonsEdited.get(2).getText(), dreamBoardToEdit));
              dreamBoardToEdit.setReasons(reasonsEdit);
              try{
                  repository.save(dreamBoardToEdit);
