@@ -31,7 +31,7 @@ public class DreamBoardController {
     }
 
     @GetMapping(value = "/getDreamBoard/{id}")
-    public ResponseEntity<?> getUniqueDreamboard(@PathVariable Long id){
+    public ResponseEntity<?> getUniqueDreamboard(@PathVariable UUID id){
         try {
             DreamBoard dreamBoard = repository.findById(id).orElseThrow();
             return ResponseEntity.ok(dreamBoard);
@@ -76,7 +76,7 @@ public class DreamBoardController {
     }
 
     @PostMapping(value = "/reasons", consumes = "multipart/form-data")
-    public ResponseEntity<?> addReasonsToDreamBoard(@RequestParam("dreamboardId") Long dreamBoardId,
+    public ResponseEntity<?> addReasonsToDreamBoard(@RequestParam("dreamboardId") UUID dreamBoardId,
                                                     @RequestParam("0[title]") String reason_title,
                                                     @RequestParam("0[img]") String reason_img,
                                                     @RequestParam("0[text]") String reason_text,
@@ -109,7 +109,7 @@ public class DreamBoardController {
     }
 
     @DeleteMapping(value = "/{dreamBoardId}")
-    public ResponseEntity<?> deleteDreamboard(@PathVariable Long dreamBoardId){
+    public ResponseEntity<?> deleteDreamboard(@PathVariable UUID dreamBoardId){
         Optional<DreamBoard> dreamBoardToDeleteOptional = repository.findById(dreamBoardId);
         if(dreamBoardToDeleteOptional.isPresent()){
             try{
@@ -126,7 +126,7 @@ public class DreamBoardController {
     }
 
     @PutMapping(value = "/{dreamBoardId}")
-    public ResponseEntity<?> editDreamBoard(@PathVariable Long dreamBoardId,
+    public ResponseEntity<?> editDreamBoard(@PathVariable UUID dreamBoardId,
                                             @RequestParam("title") String title,
                                             @RequestParam("mainObjective_text") String mainObjective_text,
                                             @RequestParam("objective_text") String objective_text,

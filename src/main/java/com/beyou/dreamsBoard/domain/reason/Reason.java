@@ -3,13 +3,17 @@ package com.beyou.dreamsBoard.domain.reason;
 import com.beyou.dreamsBoard.domain.dreamboard.DreamBoard;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "reason")
 public class Reason {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    @Column(updatable = false, unique = true, nullable = false)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "dreamboard_id", nullable = false)
@@ -22,7 +26,7 @@ public class Reason {
     @Column
     private String text;
 
-    public Reason(Long id, DreamBoard dreamBoard, String title, String img, String text) {
+    public Reason(UUID id, DreamBoard dreamBoard, String title, String img, String text) {
         this.id = id;
         this.dreamBoard = dreamBoard;
         this.title = title;
@@ -40,11 +44,11 @@ public class Reason {
     public Reason() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
