@@ -1,8 +1,8 @@
 package com.beyou.dreamsBoard.controllers;
 
-import com.beyou.dreamsBoard.user.EditEmailDTO;
+import com.beyou.dreamsBoard.user.dto.EditEmailDTO;
 import com.beyou.dreamsBoard.user.User;
-import com.beyou.dreamsBoard.user.UserEditDTO;
+import com.beyou.dreamsBoard.user.dto.UserEditDTO;
 import com.beyou.dreamsBoard.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -82,4 +82,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find user"));
         }
     }
+
+    @PostMapping("/editPassword")
+    public ResponseEntity<?> editPassword(@RequestBody )
 }

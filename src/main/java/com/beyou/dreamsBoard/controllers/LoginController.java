@@ -2,8 +2,7 @@ package com.beyou.dreamsBoard.controllers;
 
 import com.beyou.dreamsBoard.dto.LoginDTO;
 import com.beyou.dreamsBoard.security.TokenService;
-import com.beyou.dreamsBoard.user.User;
-import com.beyou.dreamsBoard.user.UserResponseDTO;
+import com.beyou.dreamsBoard.user.dto.UserResponseDTO;
 import com.beyou.dreamsBoard.user.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/login")

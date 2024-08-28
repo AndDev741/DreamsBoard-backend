@@ -1,4 +1,4 @@
-package com.beyou.dreamsBoard.user;
+package com.beyou.dreamsBoard.user.dto;
 
 import java.util.UUID;
 

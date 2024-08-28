@@ -2,14 +2,13 @@ package com.beyou.dreamsBoard.user;
 
 import com.beyou.dreamsBoard.dto.LoginDTO;
 import com.beyou.dreamsBoard.security.TokenService;
+import com.beyou.dreamsBoard.user.dto.UserResponseDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.Optional;
 
 @Service
