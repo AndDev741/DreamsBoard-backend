@@ -24,13 +24,15 @@ public class RegistrationController {
 
     @PostMapping
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
-        try {
-            User user = new User(registerDTO);
-            userService.registerNewUser(user);
-            return ResponseEntity.ok(Map.of("status", "success"));
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(Map.of("status", "error"));
+
+        User user = new User(registerDTO);
+        String response = userService.registerNewUser(user);
+        if(response.equals("success")){
+            return ResponseEntity.ok(Map.of("success", "User register successfully!"));
+        }else{
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already registered"));
         }
+
 
 
     }

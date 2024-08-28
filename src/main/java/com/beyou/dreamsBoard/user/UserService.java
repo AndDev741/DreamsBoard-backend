@@ -27,9 +27,17 @@ public class UserService {
         this.tokenService = tokenService;
     }
 
-    public void registerNewUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        repository.save(user);
+    public String registerNewUser(User user) {
+        String verifyEmail = user.getEmail();
+        Optional<User> verifyUser = repository.findByEmail(verifyEmail);
+        if(verifyUser.isPresent()){
+            return "error";
+        }else{
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            repository.save(user);
+            return "success";
+        }
+
     }
 
     public boolean userExists(String email) {
@@ -37,19 +45,19 @@ public class UserService {
 
     }
 
-    public ResponseEntity<?> makeLogin(LoginDTO login, HttpServletResponse response){
+    public Map makeLogin(LoginDTO login, HttpServletResponse response){
         Optional<User> userLogin = repository.findByEmail(login.email());
         if(userLogin.isPresent()){
             User user = userLogin.get();
             if(passwordEncoder.matches(login.password(), user.getPassword())){
                 var token = tokenService.generateToken(userLogin.get());
                 addJwtTokenToResponse(response, token);
-                return ResponseEntity.ok().body(Map.of("success", new UserResponseDTO(user.getId(), user.getName(), user.getImg_link(), user.getPerfil_phrase())));
+                return Map.of("success", new UserResponseDTO(user.getId(), user.getName(), user.getImg_link(), user.getPerfil_phrase()));
             }
         }else{
-            return ResponseEntity.badRequest().body(Map.of("error", "Email or Password invalid"));
+            return Map.of("error", "Email or Password invalid");
         }
-        return ResponseEntity.badRequest().body(Map.of("error", "Email or Password invalid"));
+        return Map.of("error", "Email or Password invalid");
     }
 
     private void addJwtTokenToResponse(HttpServletResponse response, String token) {

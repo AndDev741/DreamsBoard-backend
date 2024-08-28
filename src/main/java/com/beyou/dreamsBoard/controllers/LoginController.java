@@ -29,9 +29,9 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<?> makeLogin(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
-        ResponseEntity<?> loginResponse = userService.makeLogin(loginDTO, response);
+        Map loginResponse = userService.makeLogin(loginDTO, response);
 
-        if(loginResponse.getBody().equals(Map.of("error", "Email or Password invalid"))){
+        if(loginResponse.containsKey("error")){
             return ResponseEntity.badRequest().body(Map.of("error", "Email or Password invalid"));
         }else{
             return ResponseEntity.ok(loginResponse);
