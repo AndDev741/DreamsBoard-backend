@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -27,12 +29,14 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<?> makeLogin(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
-        try{
-            UserResponseDTO user= userService.makeLogin(loginDTO, response);
-            return ResponseEntity.ok(user);
-        } catch(RuntimeException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        ResponseEntity<?> loginResponse = userService.makeLogin(loginDTO, response);
+
+        if(loginResponse.getBody().equals(Map.of("error", "Email or Password invalid"))){
+            return ResponseEntity.badRequest().body(Map.of("error", "Email or Password invalid"));
+        }else{
+            return ResponseEntity.ok(loginResponse);
         }
+
     }
 
 }

@@ -6,9 +6,11 @@ import com.beyou.dreamsBoard.user.dto.UserResponseDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,19 +37,19 @@ public class UserService {
 
     }
 
-    public UserResponseDTO makeLogin(LoginDTO login, HttpServletResponse response){
+    public ResponseEntity<?> makeLogin(LoginDTO login, HttpServletResponse response){
         Optional<User> userLogin = repository.findByEmail(login.email());
         if(userLogin.isPresent()){
             User user = userLogin.get();
             if(passwordEncoder.matches(login.password(), user.getPassword())){
                 var token = tokenService.generateToken(userLogin.get());
                 addJwtTokenToResponse(response, token);
-                return new UserResponseDTO(user.getId(), user.getName(), user.getImg_link(), user.getPerfil_phrase());
+                return ResponseEntity.ok().body(Map.of("success", new UserResponseDTO(user.getId(), user.getName(), user.getImg_link(), user.getPerfil_phrase())));
             }
         }else{
-            throw new RuntimeException("Invalid email or password");
+            return ResponseEntity.badRequest().body(Map.of("error", "Email or Password invalid"));
         }
-        return null;
+        return ResponseEntity.badRequest().body(Map.of("error", "Email or Password invalid"));
     }
 
     private void addJwtTokenToResponse(HttpServletResponse response, String token) {
