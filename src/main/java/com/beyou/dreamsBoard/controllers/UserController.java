@@ -2,10 +2,12 @@ package com.beyou.dreamsBoard.controllers;
 
 import com.beyou.dreamsBoard.user.dto.EditEmailDTO;
 import com.beyou.dreamsBoard.user.User;
+import com.beyou.dreamsBoard.user.dto.EditPasswordDTO;
 import com.beyou.dreamsBoard.user.dto.UserEditDTO;
 import com.beyou.dreamsBoard.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,6 +20,8 @@ import java.util.UUID;
 public class UserController {
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/verify/{id}")
     public ResponseEntity<Map> verifyUser(@PathVariable UUID id){
@@ -84,5 +88,24 @@ public class UserController {
     }
 
     @PostMapping("/editPassword")
-    public ResponseEntity<?> editPassword(@RequestBody )
+    public ResponseEntity<?> editPassword(@RequestBody EditPasswordDTO editPasswordDTO){
+        try{
+            String oldPassword = editPasswordDTO.oldPass();
+            User user = repository.findById(editPasswordDTO.id()).orElseThrow();
+            if(passwordEncoder.matches(oldPassword, user.getPassword())){
+                String newPassword = editPasswordDTO.newPass();
+                user.setPassword(passwordEncoder.encode(newPassword));
+                try{
+                    repository.save(user);
+                    return ResponseEntity.ok().body(Map.of("success", "Password edited successfully!"));
+                }catch(Exception e){
+                    return ResponseEntity.badRequest().body(Map.of("error", "Error trying to save password"));
+                }
+            }else{
+                return ResponseEntity.badRequest().body(Map.of("error", "Please, try edit again"));
+            }
+        }catch (NoSuchElementException e){
+            return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find user"));
+        }
+    }
 }
