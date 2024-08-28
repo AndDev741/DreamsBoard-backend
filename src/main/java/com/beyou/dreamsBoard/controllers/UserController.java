@@ -1,5 +1,6 @@
 package com.beyou.dreamsBoard.controllers;
 
+import com.beyou.dreamsBoard.user.EditEmailDTO;
 import com.beyou.dreamsBoard.user.User;
 import com.beyou.dreamsBoard.user.UserEditDTO;
 import com.beyou.dreamsBoard.user.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -61,5 +63,23 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find the user"));
         }
         return ResponseEntity.badRequest().body(Map.of("error", "Unknown Error"));
+    }
+
+    @PostMapping("/editEmail")
+    public ResponseEntity<?> editEmail(@RequestBody EditEmailDTO editEmailDTO){
+        try{
+            User user = repository.findById(editEmailDTO.id()).orElseThrow();
+            user.setEmail(editEmailDTO.newEmail());
+
+            try{
+                repository.save(user);
+                return ResponseEntity.ok().body(Map.of("success", "Email edited successfully"));
+            }catch(Exception e){
+                return ResponseEntity.badRequest().body(Map.of("error", "Error trying to edit the email"));
+            }
+
+        }catch (NoSuchElementException e){
+            return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find user"));
+        }
     }
 }
