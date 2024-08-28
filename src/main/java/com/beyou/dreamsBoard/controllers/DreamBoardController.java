@@ -69,10 +69,10 @@ public class DreamBoardController {
                 dreamBoard = repository.save(dreamBoard);
                 return ResponseEntity.ok().body(Map.of("success", "Dreamboard saved successfully!"));
             } catch (Exception e) {
-                throw new RuntimeException("Error trying to save dreamboard", e);
+                return  ResponseEntity.badRequest().body(Map.of("error", "Error trying to save dreamboard"));
             }
         }catch (Exception e){
-            return ResponseEntity.badRequest().body(Map.of("status", "errorDreamboard"));
+            return ResponseEntity.badRequest().body(Map.of("error", "errorDreamboard"));
         }
 
     }
