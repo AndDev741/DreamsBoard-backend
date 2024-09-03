@@ -24,19 +24,23 @@ public class Reason {
     @Column
     private String img;
     @Column
+    private String img_id;
+    @Column
     private String text;
 
-    public Reason(UUID id, DreamBoard dreamBoard, String title, String img, String text) {
+    public Reason(UUID id, DreamBoard dreamBoard, String title, String img, String img_id, String text) {
         this.id = id;
         this.dreamBoard = dreamBoard;
         this.title = title;
         this.img = img;
+        this.img_id = img_id;
         this.text = text;
     }
 
-    public Reason (String title, String img, String text, DreamBoard dreamBoard) {
+    public Reason (String title, String img, String img_id ,String text, DreamBoard dreamBoard) {
         this.title = title;
         this.img = img;
+        this.img_id = img_id;
         this.text = text;
         this.dreamBoard = dreamBoard;
     }
@@ -82,5 +86,13 @@ public class Reason {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getImg_id() {
+        return img_id;
+    }
+
+    public void setImg_id(String img_id) {
+        this.img_id = img_id;
     }
 }

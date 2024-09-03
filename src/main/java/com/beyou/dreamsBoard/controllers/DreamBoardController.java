@@ -61,9 +61,9 @@ public class DreamBoardController {
 
             List<Reason> reasonsToAdd = new ArrayList<Reason>(createBoardDTO.reasons());
 
-            reasons.add(new Reason(reasonsToAdd.get(0).getTitle(), reasonsToAdd.get(0).getImg(), reasonsToAdd.get(0).getText(), dreamBoard));
-            reasons.add(new Reason(reasonsToAdd.get(1).getTitle(), reasonsToAdd.get(1).getImg(), reasonsToAdd.get(1).getText(), dreamBoard));
-            reasons.add(new Reason(reasonsToAdd.get(2).getTitle(), reasonsToAdd.get(2).getImg(), reasonsToAdd.get(2).getText(), dreamBoard));
+            reasons.add(new Reason(reasonsToAdd.get(0).getTitle(), reasonsToAdd.get(0).getImg(), reasonsToAdd.get(0).getImg_id(), reasonsToAdd.get(0).getText(), dreamBoard));
+            reasons.add(new Reason(reasonsToAdd.get(1).getTitle(), reasonsToAdd.get(1).getImg(), reasonsToAdd.get(1).getImg_id(),reasonsToAdd.get(1).getText(), dreamBoard));
+            reasons.add(new Reason(reasonsToAdd.get(2).getTitle(), reasonsToAdd.get(2).getImg(), reasonsToAdd.get(2).getImg_id(),reasonsToAdd.get(2).getText(), dreamBoard));
             dreamBoard.setReasons(reasons);
             try {
                 dreamBoard = repository.save(dreamBoard);
@@ -105,8 +105,11 @@ public class DreamBoardController {
              dreamBoardToEdit.setObjective_text(editBoardDTO.objective_text());
              dreamBoardToEdit.setReason_title(editBoardDTO.reason_title());
              dreamBoardToEdit.setBackground_img(editBoardDTO.background_img());
+             dreamBoardToEdit.setBackground_img_id(editBoardDTO.background_img_id());
              dreamBoardToEdit.setMainObjectiveImg(editBoardDTO.mainObjective_img());
+             dreamBoardToEdit.setMainObjectiveImg_id(editBoardDTO.mainObjective_img_id());
              dreamBoardToEdit.setObjective_img(editBoardDTO.objective_img());
+             dreamBoardToEdit.setObjective_img_id(editBoardDTO.objective_img_id());
 
             List<Reason> reasonsEdit = dreamBoardToEdit.getReasons();
             if (reasonsEdit == null) {
@@ -116,9 +119,9 @@ public class DreamBoardController {
             }
             List<Reason> ReasonsEdited = new ArrayList<Reason>(editBoardDTO.reasons());
 
-            reasonsEdit.add(new Reason(ReasonsEdited.get(0).getTitle(), ReasonsEdited.get(0).getImg(), ReasonsEdited.get(0).getText(), dreamBoardToEdit));
-            reasonsEdit.add(new Reason(ReasonsEdited.get(1).getTitle(), ReasonsEdited.get(1).getImg(), ReasonsEdited.get(1).getText(), dreamBoardToEdit));
-            reasonsEdit.add(new Reason(ReasonsEdited.get(2).getTitle(), ReasonsEdited.get(2).getImg(), ReasonsEdited.get(2).getText(), dreamBoardToEdit));
+            reasonsEdit.add(new Reason(ReasonsEdited.get(0).getTitle(), ReasonsEdited.get(0).getImg(), ReasonsEdited.get(0).getImg_id(),ReasonsEdited.get(0).getText(), dreamBoardToEdit));
+            reasonsEdit.add(new Reason(ReasonsEdited.get(1).getTitle(), ReasonsEdited.get(1).getImg(), ReasonsEdited.get(0).getImg_id(),ReasonsEdited.get(1).getText(), dreamBoardToEdit));
+            reasonsEdit.add(new Reason(ReasonsEdited.get(2).getTitle(), ReasonsEdited.get(2).getImg(), ReasonsEdited.get(0).getImg_id(),ReasonsEdited.get(2).getText(), dreamBoardToEdit));
              dreamBoardToEdit.setReasons(reasonsEdit);
              try{
                  repository.save(dreamBoardToEdit);
