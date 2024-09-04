@@ -5,6 +5,7 @@ import com.beyou.dreamsBoard.security.TokenService;
 import com.beyou.dreamsBoard.user.dto.UserResponseDTO;
 import com.beyou.dreamsBoard.user.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<?> makeLogin(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
+    public ResponseEntity<?> makeLogin(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response){
         Map loginResponse = userService.makeLogin(loginDTO, response);
 
         if(loginResponse.containsKey("error")){

@@ -4,6 +4,9 @@ import com.beyou.dreamsBoard.domain.dreamboard.DreamBoard;
 import com.beyou.dreamsBoard.dto.RegisterDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,10 +26,16 @@ public class User implements UserDetails {
     @UuidGenerator
     @Column(updatable = false, nullable = false, unique = true)
     private UUID id;
+    @Size(min = 2, message = "User name required a minimum of 2 characters")
+    @NotBlank(message = "User is required")
     @Column(nullable = false)
     private String name;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email invalid")
     @Column(nullable = false, unique = true)
     private String email;
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password need a minimum of 6 characters")
     @Column(nullable = false)
     private String password;
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
