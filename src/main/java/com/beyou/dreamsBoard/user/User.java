@@ -65,7 +65,7 @@ public class User implements UserDetails {
         setUpdated_at(Date.valueOf(now));
         setRole(UserRole.USER);
         setImg_link("https://i.pinimg.com/564x/e0/87/7c/e0877c5fbec4d096a4334a09bbe25ef5.jpg");
-        setPerfil_phrase("Be you best version");
+        setPerfil_phrase("Be your best version");
     }
 
     @PreUpdate
