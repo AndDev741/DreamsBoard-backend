@@ -51,7 +51,7 @@ public class ResetPasswordController {
             return ResponseEntity.ok().body(Map.of("success", "An email to recover your password was send!"));
 
         }catch (NoSuchElementException e){
-            return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find the user"));
+            return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find the email"));
         }
     }
 
@@ -63,7 +63,7 @@ public class ResetPasswordController {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
 
         if(passwordResetToken == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "this token is not valid, generate another one"));
+            return ResponseEntity.badRequest().body(Map.of("error", "Token not valid, generate another one"));
         } else if (passwordResetToken.getExpiryDate().before((new Date()))) {
             return  ResponseEntity.badRequest().body(Map.of("error", "This token is expired, generate another one"));
         } else {
