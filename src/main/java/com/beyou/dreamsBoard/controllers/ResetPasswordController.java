@@ -1,13 +1,15 @@
 package com.beyou.dreamsBoard.controllers;
 
+import com.beyou.dreamsBoard.dto.ResetPasswordDTO;
 import com.beyou.dreamsBoard.security.passwordreset.EmailService;
 import com.beyou.dreamsBoard.security.passwordreset.PasswordResetToken;
 import com.beyou.dreamsBoard.security.passwordreset.PasswordResetTokenRepository;
 import com.beyou.dreamsBoard.user.User;
 import com.beyou.dreamsBoard.user.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -21,11 +23,18 @@ public class ResetPasswordController {
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    public ResetPasswordController(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @PostMapping
-    public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestBody Map<String, String> payload){
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> payload){
         String email = payload.get("email");
         try{
             User user = userRepository.findByEmail(email).orElseThrow();
@@ -34,7 +43,7 @@ public class ResetPasswordController {
 
             createPasswordResetTokenForUser(user, token);
 
-            String resetUrl = getResetPasswordUrl(request, token);
+            String resetUrl = getResetPasswordUrl(token);
 
             emailService.sendSimpleMessage(email, "Reset Your Password",
                     "To reset your password, click the link below:\n" + resetUrl);
@@ -43,6 +52,28 @@ public class ResetPasswordController {
 
         }catch (NoSuchElementException e){
             return ResponseEntity.badRequest().body(Map.of("error", "Error trying to find the user"));
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<?> editPassword(@RequestBody @Valid ResetPasswordDTO resetPasswordDTO){
+        String token = resetPasswordDTO.token();
+        String newPassword = resetPasswordDTO.newPassword();
+
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+
+        if(passwordResetToken == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "this token is not valid, generate another one"));
+        } else if (passwordResetToken.getExpiryDate().before((new Date()))) {
+            return  ResponseEntity.badRequest().body(Map.of("error", "This token is expired, generate another one"));
+        } else {
+            User user = passwordResetToken.getUser();
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+
+            passwordResetTokenRepository.delete(passwordResetToken);
+
+            return ResponseEntity.ok().body(Map.of("success", "Password redefined successfully!"));
         }
     }
 
@@ -68,8 +99,8 @@ public class ResetPasswordController {
         return new Date(cal.getTime().getTime());
     }
 
-    private String getResetPasswordUrl(HttpServletRequest request, String token){
-        String appUrl = request.getRequestURL().toString();
+    private String getResetPasswordUrl(String token){
+        String appUrl = "http://localhost:3000/recoverPassword";
         return appUrl + "?token=" + token;
     }
 }
