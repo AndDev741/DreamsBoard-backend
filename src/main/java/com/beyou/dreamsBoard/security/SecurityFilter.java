@@ -29,8 +29,16 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
         if(token != null){
-            var login = tokenService.validateToken(token);
-            Optional<User> userOptional = repository.findByEmail(login);
+            var tokenValidationResponse = tokenService.validateToken(token);
+
+            if(tokenValidationResponse.getStatusCode().is4xxClientError()) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid Token");
+                response.getWriter().flush();
+                return;
+            }
+
+            Optional<User> userOptional = repository.findByEmail(tokenValidationResponse.getBody());
 
             if(userOptional.isPresent()){
                 User user = userOptional.get();
@@ -38,7 +46,8 @@ public class SecurityFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }else{
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid token");
+                response.getWriter().write("User not found");
+                response.getWriter().flush();
                 return;
             }
 

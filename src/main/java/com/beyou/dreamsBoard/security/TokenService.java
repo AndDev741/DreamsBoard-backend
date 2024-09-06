@@ -5,7 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.beyou.dreamsBoard.user.User;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -32,16 +34,17 @@ public class TokenService {
         }
     }
 
-    public String validateToken(String token){
+    public ResponseEntity<String> validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
+            String validToken = JWT.require(algorithm)
                     .withIssuer("auth-api")
                     .build()
                     .verify(token)
                     .getSubject();
+            return ResponseEntity.ok(validToken);
         } catch(JWTVerificationException exception) {
-            throw new RuntimeException("Invalid token", exception);
+            return ResponseEntity.badRequest().body("Invalid JWT Token");
         }
     }
 
