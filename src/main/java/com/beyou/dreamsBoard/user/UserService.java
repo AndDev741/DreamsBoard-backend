@@ -68,6 +68,8 @@ public class UserService {
         cookie.setMaxAge(7 * 24 * 60 * 60);
 
         response.addCookie(cookie);
+
+        response.setHeader("Set-Cookie", "jwt=" + token + "; Max-Age=604800; Path=/; Secure; HttpOnly; SameSite=None");
     }
 
 }
