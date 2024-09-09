@@ -100,7 +100,7 @@ public class ResetPasswordController {
     }
 
     private String getResetPasswordUrl(String token){
-        String appUrl = "http://localhost:3000/recoverPassword";
+        String appUrl = "https://dreamboards.up.railway.app/recoverPassword";
         return appUrl + "?token=" + token;
     }
 }
