@@ -6,6 +6,7 @@ import com.beyou.dreamsBoard.user.dto.UserResponseDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,7 +70,7 @@ public class UserService {
 
         response.addCookie(cookie);
 
-        response.setHeader("Set-Cookie", "jwt=" + token + "; Max-Age=604800; Path=/; Secure; HttpOnly; SameSite=None");
+        response.setHeader(HttpHeaders.SET_COOKIE, "jwt=" + token + "; Max-Age=604800; Path=/; Secure; HttpOnly; SameSite=None");
     }
 
 }
