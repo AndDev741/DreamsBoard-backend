@@ -53,7 +53,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000/", "https://dreamboards.vercel.app/"));
+        config.setAllowedOrigins(List.of("http://localhost:3000/", "https://dreamboards.up.railway.app/"));
         config.addAllowedHeader("Content-Type");
         config.addAllowedHeader("Authorization");
         config.addAllowedMethod("GET");
