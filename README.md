@@ -1,0 +1,43 @@
+Project structure
+
+- .mvn/wrapper
+- src
+    - main/java/com/beyou/dreamsBoard
+        - controllers (Where the controllers are)
+            - `DreamBoardController.java` (The endpoint that control dreamboard)
+            - `LoginController.java` (The endpoint that control login)
+            - `RegistrationController.java` (The endpoint that control register)
+            - `ResetPasswordController.java` (The endpoint that control the resetPassword logic)
+            - `UserController.java` (The endpoint that control user logics)
+        - domain (The main classes of DreamBoard application)
+            - dreamboard (Entity class, DTO classes and repository of the DreamBoard class)
+                - `CreateBoardDTO.java`
+                - `DreamBoard.java`
+                - `DreamBoardRepository`
+                - `EditBoardDTO`
+            - reason (Entity class of reason)
+                - `Reason.java`
+        - dto (Data transfer objects)
+            - `LoginDTO.java` (A DTO class that receive login information)
+            - `RegisterDTO.java` (A DTO class that receive register information
+            - `ResetPasswordDTO.java` (A DTO class that receive the token and new password)
+        - security (Where the security class are)
+            - `SecurityConfig.java` (The main config of the security in the application)
+            - `SecurityFilter.java` (A filter that verify if the user is authenticated)
+            - `TokenService.java` (A service class that generate and verify tokens of acess)
+        - user (User entity, service and other utility class)
+            - dto (Data transfer objects that use user information)
+                - `EditEmailDTO`
+                - `EditPasswordDTO`
+                - `UserEditDTO`
+                - `UserResponseDTO`
+            - `User.java` (The main class of user (Also a entity for the database))
+            - `UserRepository.java` (The repository of user, control the database actions)
+            - `UserRole.java` (A enum to classify the role “user”)
+            - `UserService.java` (A lot of functions that have a service logic to the application)
+        - `DreamsBoardApplication.java` (The main runner of application)
+        - resources
+            - `application.properties` (Informations about database conection, token secret and reset password email)
+    - test
+- .gitignore
+- …
